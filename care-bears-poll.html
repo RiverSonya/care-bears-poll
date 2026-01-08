@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐻 Care Bears Team Matcher</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Lucide icons as inline SVG components
+    const Heart = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+      </svg>
+    );
+
+    const Sparkles = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+        <path d="M5 3v4"/>
+        <path d="M19 17v4"/>
+        <path d="M3 5h4"/>
+        <path d="M17 19h4"/>
+      </svg>
+    );
+
+    const Sun = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2"/>
+        <path d="M12 20v2"/>
+        <path d="m4.93 4.93 1.41 1.41"/>
+        <path d="m17.66 17.66 1.41 1.41"/>
+        <path d="M2 12h2"/>
+        <path d="M20 12h2"/>
+        <path d="m6.34 17.66-1.41 1.41"/>
+        <path d="m19.07 4.93-1.41 1.41"/>
+      </svg>
+    );
+
+    const Cloud = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+      </svg>
+    );
+
+    const Clover = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M16.2 3.8a2.7 2.7 0 0 0-3.81 0l-.4.38-.4-.4a2.7 2.7 0 0 0-3.82 0C6.73 4.85 6.67 6.64 8 8l4 4 4-4c1.33-1.36 1.27-3.15.2-4.2z"/>
+        <path d="M8 8c-1.36-1.33-3.15-1.27-4.2-.2a2.7 2.7 0 0 0 0 3.81l.38.4-.4.4a2.7 2.7 0 0 0 0 3.82C4.85 17.27 6.64 17.33 8 16"/>
+        <path d="M16 16c1.36 1.33 3.15 1.27 4.2.2a2.7 2.7 0 0 0 0-3.81l-.38-.4.4-.4a2.7 2.7 0 0 0 0-3.82C19.15 6.73 17.36 6.67 16 8"/>
+        <path d="M7.8 20.2a2.7 2.7 0 0 0 3.81 0l.4-.38.4.4a2.7 2.7 0 0 0 3.82 0c1.06-1.06 1.12-2.85-.21-4.21l-4-4-4 4c-1.33 1.36-1.27 3.15-.22 4.19z"/>
+        <path d="m7 17-5 5"/>
+      </svg>
+    );
+
+    const Flower2 = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"/>
+        <circle cx="12" cy="8" r="2"/>
+        <path d="M12 10v12"/>
+        <path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z"/>
+        <path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z"/>
+      </svg>
+    );
+
+    const Users = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    );
+
+    const Gift = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <rect x="3" y="8" width="18" height="4" rx="1"/>
+        <path d="M12 8v13"/>
+        <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/>
+        <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>
+      </svg>
+    );
+
+    const Star = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+    );
+
+    const Moon = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    );
+
+    const CareBearsPoll = () => {
+      const [currentTab, setCurrentTab] = useState('vote');
+      const [voterName, setVoterName] = useState('');
+      const [hasVoted, setHasVoted] = useState(false);
+      const [votes, setVotes] = useState({});
+      const [selections, setSelections] = useState({});
+      const [loading, setLoading] = useState(true);
+
+      // JSONBin.io configuration
+      const BIN_ID = '696030c2ae596e708fce8c5d';
+      const API_KEY = '$2a$10$evTOLgP1bs54W5ayk7bPOucQl7cjblHBN6nLzXms5fOUD.zska/cC';
+      const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+      const careBears = [
+        { name: 'Tenderheart Bear', icon: Heart, color: '#FF69B4', description: 'The unofficial leader, focused on spreading love' },
+        { name: 'Cheer Bear', icon: Sparkles, color: '#FF1493', description: 'Known for optimism and spreading happiness' },
+        { name: 'Funshine Bear', icon: Sun, color: '#FFD700', description: 'Represents joy and fun; and yes - new features can be fun! So can jokes, memes, gifs, and entertaining meetings' },
+        { name: 'Grumpy Bear', icon: Cloud, color: '#4169E1', description: 'Relatable for his authentic grumpiness, which is important to help people not bypass emotions or potential technical issues' },
+        { name: 'Good Luck Bear', icon: Clover, color: '#32CD32', description: 'Brings good fortune, including smooth deploys and reduced tech debt' },
+        { name: 'Love-a-Lot Bear', icon: Flower2, color: '#FF69B4', description: 'Celebrates all kinds of affection' },
+        { name: 'Friend Bear', icon: Users, color: '#FFA500', description: 'Emphasizes friendship and being a confidant; always ready to rubber duck or help debug an issue' },
+        { name: 'Birthday Bear', icon: Gift, color: '#FFD700', description: 'Celebrates birthdays and special days, including celebrating effort, good work, successful releases, and new features' },
+        { name: 'Wish Bear', icon: Star, color: '#00CED1', description: 'Encourages dreams and wishes, including ways to improve our system and process' },
+        { name: 'Bedtime Bear', icon: Moon, color: '#6495ED', description: 'Helps children feel safe and sleep peacefully; or helps engineers sleep peacefully by ensuring things are carefully built, well tested, and have the proper observability' }
+      ];
+
+      const teamMembers = ['Ian', 'Liam', 'Jackie', 'Javi', 'Jonathan', 'Nathan', 'Sonya', 'Souffiane'];
+
+      useEffect(() => {
+        loadAllVotes();
+      }, []);
+
+      const loadAllVotes = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(API_URL, {
+            method: 'GET',
+            headers: {
+              'X-Master-Key': API_KEY
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setVotes(data.record || {});
+          } else {
+            console.log('Could not load votes, starting fresh');
+            setVotes({});
+          }
+        } catch (error) {
+          console.log('Error loading votes:', error);
+          setVotes({});
+        }
+        setLoading(false);
+      };
+
+      const handleVote = async () => {
+        if (!voterName.trim()) {
+          alert('Please enter your name!');
+          return;
+        }
+
+        if (Object.keys(selections).length !== teamMembers.length) {
+          alert('Please match all team members with Care Bears!');
+          return;
+        }
+
+        try {
+          const updatedVotes = {
+            ...votes,
+            [voterName]: selections
+          };
+
+          const response = await fetch(API_URL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify(updatedVotes)
+          });
+
+          if (response.ok) {
+            setVotes(updatedVotes);
+            setHasVoted(true);
+            setCurrentTab('results');
+          } else {
+            alert('Error saving vote. Please try again.');
+          }
+        } catch (error) {
+          alert('Error saving vote. Please try again.');
+          console.error(error);
+        }
+      };
+
+      const handleReset = () => {
+        setVoterName('');
+        setSelections({});
+        setHasVoted(false);
+      };
+
+      const getBearIcon = (bearName) => {
+        const bear = careBears.find(b => b.name === bearName);
+        return bear ? bear.icon : Heart;
+      };
+
+      const getBearColor = (bearName) => {
+        const bear = careBears.find(b => b.name === bearName);
+        return bear ? bear.color : '#FF69B4';
+      };
+
+      const getVoteCounts = () => {
+        const counts = {};
+        teamMembers.forEach(member => {
+          counts[member] = {};
+          careBears.forEach(bear => {
+            counts[member][bear.name] = 0;
+          });
+        });
+
+        Object.values(votes).forEach(voterSelections => {
+          Object.entries(voterSelections).forEach(([member, bear]) => {
+            if (counts[member] && counts[member][bear] !== undefined) {
+              counts[member][bear]++;
+            }
+          });
+        });
+
+        return counts;
+      };
+
+      const getOptimalMatching = () => {
+        const counts = getVoteCounts();
+        const matching = {};
+        const usedBears = new Set();
+        const remainingMembers = [...teamMembers];
+
+        const pairs = [];
+        teamMembers.forEach(member => {
+          careBears.forEach(bear => {
+            pairs.push({
+              member,
+              bear: bear.name,
+              votes: counts[member][bear.name]
+            });
+          });
+        });
+
+        pairs.sort((a, b) => b.votes - a.votes);
+
+        for (const pair of pairs) {
+          if (!matching[pair.member] && !usedBears.has(pair.bear)) {
+            matching[pair.member] = {
+              bear: pair.bear,
+              votes: pair.votes
+            };
+            usedBears.add(pair.bear);
+            const index = remainingMembers.indexOf(pair.member);
+            if (index > -1) remainingMembers.splice(index, 1);
+            
+            if (remainingMembers.length === 0) break;
+          }
+        }
+
+        return matching;
+      };
+
+      if (loading) {
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 flex items-center justify-center">
+            <div className="text-2xl text-purple-600">Loading votes...</div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 mb-4">
+                🐻 Care Bears Team Matcher 🐻
+              </h1>
+              <p className="text-xl text-gray-700">Match your teammates with their perfect Care Bear!</p>
+            </div>
+
+            <div className="flex gap-4 mb-8 justify-center">
+              <button
+                onClick={() => setCurrentTab('vote')}
+                className={`px-8 py-3 rounded-lg font-semibold text-lg transition-all ${
+                  currentTab === 'vote'
+                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg scale-105'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Vote ({Object.keys(votes).length} voters)
+              </button>
+              <button
+                onClick={() => setCurrentTab('results')}
+                className={`px-8 py-3 rounded-lg font-semibold text-lg transition-all ${
+                  currentTab === 'results'
+                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg scale-105'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Results
+              </button>
+            </div>
+
+            {currentTab === 'vote' && (
+              <div>
+                <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+                  <h2 className="text-3xl font-bold text-purple-600 mb-6 text-center">Meet the Care Bears</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {careBears.map((bear) => {
+                      const Icon = bear.icon;
+                      return (
+                        <div key={bear.name} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
+                          <div className="flex-shrink-0">
+                            <Icon size={32} color={bear.color} fill={bear.color} opacity={0.3} />
+                          </div>
+                          <div>
+                            <div className="font-bold text-gray-800" style={{ color: bear.color }}>{bear.name}</div>
+                            <div className="text-sm text-gray-600">{bear.description}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-lg p-8">
+                  {!hasVoted ? (
+                    <>
+                      <div className="mb-6">
+                        <label className="block text-lg font-semibold text-gray-700 mb-2">Your Name:</label>
+                        <input
+                          type="text"
+                          value={voterName}
+                          onChange={(e) => setVoterName(e.target.value)}
+                          placeholder="Enter your name"
+                          className="w-full max-w-md px-4 py-3 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:outline-none text-lg"
+                        />
+                      </div>
+
+                      <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-4">Match Team Members to Care Bears:</h3>
+                        {teamMembers.map((member) => {
+                          const Icon = selections[member] ? getBearIcon(selections[member]) : Heart;
+                          const color = selections[member] ? getBearColor(selections[member]) : '#9CA3AF';
+                          
+                          return (
+                            <div key={member} className="border-2 border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-all">
+                              <div className="flex items-center gap-3 mb-3">
+                                <Icon size={28} color={color} />
+                                <span className="text-xl font-bold text-gray-800">{member}</span>
+                                {selections[member] && (
+                                  <span className="text-sm text-gray-600">→ {selections[member]}</span>
+                                )}
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                {careBears.map((bear) => {
+                                  const BearIcon = bear.icon;
+                                  const isSelected = selections[member] === bear.name;
+                                  return (
+                                    <button
+                                      key={bear.name}
+                                      onClick={() => setSelections({ ...selections, [member]: bear.name })}
+                                      className={`px-3 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${
+                                        isSelected
+                                          ? 'ring-2 ring-offset-2 shadow-lg scale-105'
+                                          : 'bg-gray-100 hover:bg-gray-200'
+                                      }`}
+                                      style={{
+                                        backgroundColor: isSelected ? bear.color : undefined,
+                                        color: isSelected ? 'white' : '#374151',
+                                        ringColor: bear.color
+                                      }}
+                                    >
+                                      <BearIcon size={16} />
+                                      <span className="truncate">{bear.name.replace(' Bear', '')}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <button
+                        onClick={handleVote}
+                        className="w-full mt-8 px-8 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-lg font-bold text-xl hover:shadow-xl transition-all transform hover:scale-105"
+                      >
+                        Submit Votes
+                      </button>
+                    </>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4">🎉</div>
+                      <h3 className="text-3xl font-bold text-purple-600 mb-4">Thanks for voting!</h3>
+                      <p className="text-xl text-gray-600 mb-6">Your votes have been saved.</p>
+                      <button
+                        onClick={handleReset}
+                        className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-all"
+                      >
+                        Vote Again
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {currentTab === 'results' && (
+              <div className="space-y-8">
+                <div className="bg-white rounded-xl shadow-lg p-8">
+                  <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-6 text-center">
+                    ⭐ Best Matches (Optimal 1-to-1 Assignment) ⭐
+                  </h2>
+                  {Object.keys(votes).length === 0 ? (
+                    <p className="text-center text-gray-500 text-lg">No votes yet! Be the first to vote.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {Object.entries(getOptimalMatching()).map(([member, data]) => {
+                        const Icon = getBearIcon(data.bear);
+                        const color = getBearColor(data.bear);
+                        return (
+                          <div
+                            key={member}
+                            className="border-4 rounded-xl p-4 text-center transform hover:scale-105 transition-all shadow-lg"
+                            style={{ borderColor: color }}
+                          >
+                            <Icon size={48} color={color} className="mx-auto mb-3" fill={color} opacity={0.3} />
+                            <div className="font-bold text-xl text-gray-800 mb-1">{member}</div>
+                            <div className="text-sm font-semibold mb-2" style={{ color }}>{data.bear}</div>
+                            <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">
+                              {data.votes} {data.votes === 1 ? 'vote' : 'votes'}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-white rounded-xl shadow-lg p-8">
+                  <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Full Voting Breakdown</h2>
+                  {Object.keys(votes).length === 0 ? (
+                    <p className="text-center text-gray-500 text-lg">No votes yet!</p>
+                  ) : (
+                    <div className="space-y-6">
+                      {teamMembers.map((member) => {
+                        const counts = getVoteCounts()[member];
+                        const sortedBears = Object.entries(counts)
+                          .filter(([_, count]) => count > 0)
+                          .sort(([, a], [, b]) => b - a);
+
+                        return (
+                          <div key={member} className="border-2 border-gray-200 rounded-lg p-6">
+                            <h3 className="text-2xl font-bold text-gray-800 mb-4">{member}</h3>
+                            {sortedBears.length === 0 ? (
+                              <p className="text-gray-500">No votes yet</p>
+                            ) : (
+                              <div className="space-y-2">
+                                {sortedBears.map(([bearName, count]) => {
+                                  const Icon = getBearIcon(bearName);
+                                  const color = getBearColor(bearName);
+                                  const totalVotes = Object.keys(votes).length;
+                                  const percentage = Math.round((count / totalVotes) * 100);
+
+                                  return (
+                                    <div key={bearName} className="flex items-center gap-3">
+                                      <Icon size={24} color={color} />
+                                      <div className="flex-1">
+                                        <div className="flex justify-between items-center mb-1">
+                                          <span className="font-semibold text-gray-700">{bearName}</span>
+                                          <span className="text-sm font-bold text-gray-600">
+                                            {count} {count === 1 ? 'vote' : 'votes'} ({percentage}%)
+                                          </span>
+                                        </div>
+                                        <div className="w-full bg-gray-200 rounded-full h-3">
+                                          <div
+                                            className="h-3 rounded-full transition-all"
+                                            style={{
+                                              width: `${percentage}%`,
+                                              backgroundColor: color
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {Object.keys(votes).length > 0 && (
+                  <div className="bg-white rounded-xl shadow-lg p-6">
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">Voters ({Object.keys(votes).length}):</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.keys(votes).map((voter) => (
+                        <span key={voter} className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full font-semibold">
+                          {voter}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<CareBearsPoll />, document.getElementById('root'));
+  </script>
+</body>
+</html>
