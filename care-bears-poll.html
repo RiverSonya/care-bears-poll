@@ -358,7 +358,7 @@
         const counts = {};
         teamMembers.forEach(member => {
           counts[member] = {};
-          careBears.forEach(bear => {
+          round2Bears.forEach(bear => {
             counts[member][bear.name] = 0;
           });
         });
@@ -382,7 +382,7 @@
 
         const pairs = [];
         teamMembers.forEach(member => {
-          careBears.forEach(bear => {
+          round2Bears.forEach(bear => {
             pairs.push({
               member,
               bear: bear.name,
@@ -587,9 +587,32 @@
 
             {currentTab === 'results' && (
               <div className="space-y-8">
+                <div className="bg-white rounded-xl shadow-lg p-8 border-4 border-amber-300">
+                  <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Round 1 Locked Assignments 🏆</h2>
+                  <p className="text-center text-gray-600 mb-6">Settled from our first vote.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {lockedAssignments.map(({ member, bear }) => {
+                      const bearData = careBears.find(b => b.name === bear);
+                      const Icon = bearData.icon;
+                      return (
+                        <div
+                          key={member}
+                          className="border-4 rounded-xl p-4 text-center bg-gradient-to-br from-amber-50 to-yellow-50"
+                          style={{ borderColor: bearData.color }}
+                        >
+                          <Icon size={48} color={bearData.color} className="mx-auto mb-3" fill={bearData.color} opacity={0.3} />
+                          <div className="font-bold text-xl text-gray-800 mb-1">{member}</div>
+                          <div className="text-sm font-semibold mb-2" style={{ color: bearData.color }}>{bear}</div>
+                          <div className="inline-block px-3 py-1 bg-amber-200 text-amber-800 rounded-full text-xs font-bold">🔒 Locked</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="bg-white rounded-xl shadow-lg p-8">
                   <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-6 text-center">
-                    ⭐ Best Matches (Optimal 1-to-1 Assignment) ⭐
+                    ⭐ Round 2 Best Matches (Optimal 1-to-1 Assignment) ⭐
                   </h2>
                   {Object.keys(votes).length === 0 ? (
                     <p className="text-center text-gray-500 text-lg">No votes yet! Be the first to vote.</p>
