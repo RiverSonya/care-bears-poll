@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Update `care-bears-poll.html` to lock in the 9 round 1 matches, expand the bear pool with 11 new bears (10 from the Care Bears wiki + a custom Claude Bear), run a round 2 vote for 6 new teammates, and fix a concurrent-vote race condition.
+**Goal:** Update `care-bears-poll.html` to lock in the 9 round 1 matches, expand the bear pool with 12 new bears (11 from the Care Bears wiki including Forest Friend Bear + a custom Claude Bear), audit all bear colors and icons against canonical Care Bears references, run a round 2 vote for 6 new teammates, and fix a concurrent-vote race condition.
 
 **Architecture:** All changes happen inside the single file `care-bears-poll.html`. The 9 round 1 matches are hardcoded as a `lockedAssignments` constant. The `careBears` array grows from 10 to 21 entries and the locked bears get elaborated two-part descriptions. A derived `round2Bears` array (filtered to drop the 9 locked bears) drives the round 2 voting UI and results computations. The `handleVote` function does a fresh `GET` before the `PUT` to avoid clobbering concurrent votes.
 
@@ -157,52 +157,155 @@ git commit -m "Add SVG icon components for round 2 bears"
 
 ---
 
-## Task 2: Update `careBears` array — elaborate 9 locked descriptions and append 11 new bears
+## Task 1b: Replace unused icons with canonical tummy-symbol icons
+
+After a canonical-accuracy audit (see spec § "Canonical color and icon table"), 5 of the icons added in Task 1 turned out not to match any canonical Care Bears tummy symbol and are removed. 6 new canonical-tummy-symbol icons are added in their place.
 
 **Files:**
-- Modify: `care-bears-poll.html` lines 125–136 (the `careBears = [...]` array).
+- Modify: `care-bears-poll.html` — in the icon block between `Moon` (around line 110 of original) and `const CareBearsPoll = () => {` (after Task 1, this block now ends around line 208).
 
-The new array has 21 entries. The 9 locked bears keep the same `name`/`icon`/`color` and get richer two-part descriptions. Birthday Bear keeps its existing entry. The 11 new bears are appended.
+**Removed (added in Task 1, unused after canonical audit):**
+- `Music`, `Share2`, `Shield`, `Compass`, `Telescope`
+
+**Added (canonical tummy symbols):**
+- `Rainbow` (Cheer Bear)
+- `Cake` (Birthday Bear — cupcake)
+- `Flower` (Harmony Bear — single smiling flower; distinct from existing `Flower2`)
+- `Lollipop` (Share Bear — two crossed lollipops)
+- `Crown` (Brave Heart Lion — heart with crown)
+- `TreePine` (Forest Friend Bear)
+
+- [ ] **Step 1: Remove the 5 unused icon components**
+
+In `care-bears-poll.html`, find and delete the entire component definitions for `Music`, `Share2`, `Shield`, `Compass`, and `Telescope` (added in Task 1). Each is in the form:
+
+```jsx
+    const Music = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        ...
+      </svg>
+    );
+```
+
+Delete the whole block (the `const Foo = ...);` plus the trailing blank line) for each of the 5 names.
+
+- [ ] **Step 2: Add the 6 new icon components**
+
+Insert these 6 new components into the same icon block (anywhere between `Moon` and the start of `CareBearsPoll`; placement order is cosmetic, alphabetical or appearance order both fine). Use the same 4-space indentation as existing icon components.
+
+```jsx
+    const Rainbow = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M22 17a10 10 0 0 0-20 0"/>
+        <path d="M6 17a6 6 0 0 1 12 0"/>
+        <path d="M10 17a2 2 0 0 1 4 0"/>
+      </svg>
+    );
+
+    const Cake = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/>
+        <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/>
+        <path d="M2 21h20"/>
+        <path d="M7 8v3"/>
+        <path d="M12 8v3"/>
+        <path d="M17 8v3"/>
+        <path d="M7 4h.01"/>
+        <path d="M12 4h.01"/>
+        <path d="M17 4h.01"/>
+      </svg>
+    );
+
+    const Flower = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/>
+      </svg>
+    );
+
+    const Lollipop = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <circle cx="12" cy="9" r="6"/>
+        <path d="M12 15v6"/>
+        <path d="M12 5a4 4 0 0 0-2 7.5"/>
+      </svg>
+    );
+
+    const Crown = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/>
+        <path d="M5 21h14"/>
+      </svg>
+    );
+
+    const TreePine = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L11.3 3a1 1 0 0 1 1.4 0L16 7.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z"/>
+        <path d="M12 22v-3"/>
+      </svg>
+    );
+```
+
+- [ ] **Step 3: Verify in browser**
+
+Open `care-bears-poll.html`. Page should still load with no console errors. The 5 unused icons (Music/Share2/Shield/Compass/Telescope) are gone; the 6 new ones are present but not yet used (Task 2 will reference them).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add care-bears-poll.html
+git commit -m "Replace unused icons with canonical tummy-symbol icons"
+```
+
+---
+
+## Task 2: Update `careBears` array — canonical colors, canonical icons, 12 new bears (incl. Forest Friend)
+
+**Files:**
+- Modify: `care-bears-poll.html` lines 125–136 of the original (`careBears = [...]` array — line numbers may have shifted after Tasks 1 and 1b; locate by content).
+
+The new array has 22 entries. All bears use **canonical Care Bears fur colors and tummy-symbol-inspired icons** (see spec § "Canonical color and icon table"). The 9 locked bears keep their identity but get updated colors, icons (where canon differs), and richer two-part descriptions. The 13 round 2 bears (Birthday + Forest Friend + 10 wiki + Claude) are added/updated to round out the array.
 
 - [ ] **Step 1: Replace the `careBears` array**
 
-Find lines 125–136 (the `const careBears = [ ... ];` block) and replace with:
+Find the `const careBears = [ ... ];` block and replace with:
 
 ```jsx
       const careBears = [
-        { name: 'Tenderheart Bear', icon: Heart, color: '#FF69B4', description: 'The unofficial leader of the Care Bears, focused on caring and spreading love; the team lead who keeps everyone aligned, unblocks people, and treats teammates with empathy.' },
-        { name: 'Cheer Bear', icon: Sparkles, color: '#FF1493', description: 'Known for her optimism and spreading happiness wherever she goes; the relentless cheerleader who celebrates every green CI build and keeps morale up during long debugging sessions.' },
-        { name: 'Funshine Bear', icon: Sun, color: '#FFD700', description: 'Represents joy and fun and brings sunshine wherever he goes; and yes - new features can be fun! So can jokes, memes, gifs, and entertaining meetings.' },
-        { name: 'Grumpy Bear', icon: Cloud, color: '#4169E1', description: 'Relatable for his authentic grumpiness, even though he secretly cares deeply; important for helping people not bypass emotions or potential technical issues, and for asking "are we sure about this?" before merging.' },
-        { name: 'Good Luck Bear', icon: Clover, color: '#32CD32', description: 'Brings good fortune and shamrocks to everyone around him; including smooth deploys, reduced tech debt, and the kind of luck that comes from solid fundamentals.' },
-        { name: 'Love-a-Lot Bear', icon: Flower2, color: '#FF69B4', description: 'Celebrates all kinds of affection with two pink hearts on her tummy; the engineer who hypes everyone\'s PRs, leaves thoughtful review comments, and remembers everyone\'s birthday.' },
-        { name: 'Friend Bear', icon: Users, color: '#FFA500', description: 'Emphasizes friendship and being a confidant; always ready to rubber duck or help debug an issue, the first DM you send when stuck.' },
-        { name: 'Birthday Bear', icon: Gift, color: '#FFD700', description: 'Celebrates birthdays and special days; including celebrating effort, good work, successful releases, and new features.' },
-        { name: 'Wish Bear', icon: Star, color: '#00CED1', description: 'Encourages dreams and wishes upon a star; the engineer always thinking about ways to improve our system and process, sketching the better future state.' },
-        { name: 'Bedtime Bear', icon: Moon, color: '#6495ED', description: 'Helps children feel safe and sleep peacefully; or helps engineers sleep peacefully by ensuring things are carefully built, well tested, and have the proper observability.' },
-        { name: 'Champ Bear', icon: Trophy, color: '#FFB800', description: 'An athletic bear with a gold star on his tummy who celebrates good sportsmanship and personal achievement; the engineer who takes pride in shipping, runs benchmarks, and competes mostly with their own past self.' },
-        { name: 'Harmony Bear', icon: Music, color: '#C490E4', description: 'Brings a sense of balance and helps friends get along, with a smiling flower on her tummy; the connector who facilitates conflict resolution, runs great pair-programming sessions, and senses when team dynamics need attention.' },
-        { name: 'Share Bear', icon: Share2, color: '#F9A8D4', description: 'Believes the best way to enjoy something is to share it with others; the documentarian who writes the README nobody asked for but everyone uses, and who genuinely loves teaching.' },
-        { name: 'Smart Heart Bear', icon: Lightbulb, color: '#14B8A6', description: 'A clever Care Bear who loves learning and uses her brains to help her friends; the deep-dives engineer who roots out the actual cause instead of papering over symptoms.' },
-        { name: 'Brave Heart Lion', icon: Shield, color: '#EA580C', description: 'A courageous lion among the Care Bear cousins, willing to face scary challenges with a bold heart; the engineer who volunteers for the gnarly refactor, the legacy code with no tests, and the migration nobody else wants.' },
-        { name: 'Surprise Bear', icon: PartyPopper, color: '#FACC15', description: 'Loves the joy of unexpected delights, with a star tummy symbol that lights up at the unexpected; the engineer who doesn\'t panic when prod surprises us at 2am, and who finds edge cases everyone else missed.' },
-        { name: 'Secret Bear', icon: Lock, color: '#6B21A8', description: 'Trustworthy and discreet, a Care Bear who keeps friends\' secrets safe with a heart-shaped lock on his tummy; the security-minded engineer who handles credentials carefully, threat-models early, and never logs the access token.' },
-        { name: 'True Heart Bear', icon: Compass, color: '#E11D48', description: 'The leader of the Care Bear cubs, with a rainbow heart symbolizing sincerity and integrity; the senior engineer who runs blameless postmortems, gives honest reviews, and tells you the unvarnished truth even when it\'s hard.' },
-        { name: 'Wonderheart Bear', icon: Telescope, color: '#7C3AED', description: 'Filled with curiosity and wonder, exploring the world with bright eyes; the engineer who is always evaluating new tools, prototyping wild ideas in spare time, and asking "what if we tried...?"' },
-        { name: 'Take Care Bear', icon: HeartHandshake, color: '#5EEAD4', description: 'A caring Care Bear who looks out for friends when they\'re feeling down or under the weather; the on-call hero who supports teammates through outages and notices when someone\'s burning out.' },
+        { name: 'Tenderheart Bear', icon: Heart, color: '#C68863', description: 'The unofficial leader of the Care Bears, with a red heart on his tan tummy, focused on caring and spreading love; the team lead who keeps everyone aligned, unblocks people, and treats teammates with empathy.' },
+        { name: 'Cheer Bear', icon: Rainbow, color: '#FFB7C5', description: 'Known for her optimism and spreading happiness wherever she goes, with a rainbow on her pink tummy; the relentless cheerleader who celebrates every green CI build and keeps morale up during long debugging sessions.' },
+        { name: 'Funshine Bear', icon: Sun, color: '#FFD93D', description: 'Represents joy and fun and brings sunshine wherever he goes, with a smiling sun on his yellow tummy; and yes - new features can be fun! So can jokes, memes, gifs, and entertaining meetings.' },
+        { name: 'Grumpy Bear', icon: Cloud, color: '#5B9BD5', description: 'Relatable for his authentic grumpiness, with a raincloud on his blue tummy, even though he secretly cares deeply; important for helping people not bypass emotions or potential technical issues, and for asking "are we sure about this?" before merging.' },
+        { name: 'Good Luck Bear', icon: Clover, color: '#7BC967', description: 'Brings good fortune and shamrocks to everyone around him, with a four-leaf clover on his green tummy; including smooth deploys, reduced tech debt, and the kind of luck that comes from solid fundamentals.' },
+        { name: 'Love-a-Lot Bear', icon: Heart, color: '#FF85A2', description: 'Celebrates all kinds of affection, with two pink hearts on her pink tummy; the engineer who hypes everyone\'s PRs, leaves thoughtful review comments, and remembers everyone\'s birthday.' },
+        { name: 'Friend Bear', icon: Flower2, color: '#F4B183', description: 'Emphasizes friendship and being a confidant, with two yellow daisies on her peach tummy; always ready to rubber duck or help debug an issue, the first DM you send when stuck.' },
+        { name: 'Wish Bear', icon: Star, color: '#7DCEC4', description: 'Encourages dreams and wishes upon a star, with a shooting star on her turquoise tummy; the engineer always thinking about ways to improve our system and process, sketching the better future state.' },
+        { name: 'Bedtime Bear', icon: Moon, color: '#6E8FBC', description: 'Helps children feel safe and sleep peacefully, with a crescent moon and star on his blue tummy; or helps engineers sleep peacefully by ensuring things are carefully built, well tested, and have the proper observability.' },
+        { name: 'Birthday Bear', icon: Cake, color: '#FFD93D', description: 'Celebrates birthdays and special days, with a candle-lit cupcake on her yellow tummy; including celebrating effort, good work, successful releases, and new features.' },
+        { name: 'Champ Bear', icon: Trophy, color: '#4A90E2', description: 'An athletic blue bear with a gold trophy and star on his tummy who celebrates good sportsmanship and personal achievement; the engineer who takes pride in shipping, runs benchmarks, and competes mostly with their own past self.' },
+        { name: 'Harmony Bear', icon: Flower, color: '#B58FC9', description: 'Brings a sense of balance and helps friends get along, with a smiling flower on her purple tummy; the connector who facilitates conflict resolution, runs great pair-programming sessions, and senses when team dynamics need attention.' },
+        { name: 'Share Bear', icon: Lollipop, color: '#C8A2C8', description: 'Believes the best way to enjoy something is to share it with others, with two crossed lollipops on her lilac tummy; the documentarian who writes the README nobody asked for but everyone uses, and who genuinely loves teaching.' },
+        { name: 'Smart Heart Bear', icon: Lightbulb, color: '#FFC0CB', description: 'A clever pink Care Bear who loves learning and uses her brains to help her friends, with a heart full of stars on her tummy; the deep-dives engineer who roots out the actual cause instead of papering over symptoms.' },
+        { name: 'Brave Heart Lion', icon: Crown, color: '#E89B43', description: 'A courageous golden lion among the Care Bear cousins, with a red heart wearing a crown on his tummy, willing to face scary challenges; the engineer who volunteers for the gnarly refactor, the legacy code with no tests, and the migration nobody else wants.' },
+        { name: 'Surprise Bear', icon: PartyPopper, color: '#C58BB8', description: 'Loves the joy of unexpected delights, with a star tummy symbol that lights up at the unexpected; the engineer who doesn\'t panic when prod surprises us at 2am, and who finds edge cases everyone else missed.' },
+        { name: 'Secret Bear', icon: Lock, color: '#FF85A2', description: 'Trustworthy and discreet, a pink Care Bear who keeps friends\' secrets safe with a heart-shaped padlock on his tummy; the security-minded engineer who handles credentials carefully, threat-models early, and never logs the access token.' },
+        { name: 'True Heart Bear', icon: Heart, color: '#FFB6C1', description: 'The leader of the Care Bear cubs, with a rainbow heart symbolizing sincerity and integrity; the senior engineer who runs blameless postmortems, gives honest reviews, and tells you the unvarnished truth even when it\'s hard.' },
+        { name: 'Wonderheart Bear', icon: Heart, color: '#FF85B5', description: 'Filled with curiosity and wonder, with a big heart surrounded by little hearts on her pink tummy; the engineer who is always evaluating new tools, prototyping wild ideas in spare time, and asking "what if we tried...?"' },
+        { name: 'Take Care Bear', icon: HeartHandshake, color: '#B19CD9', description: 'A caring lavender Care Bear who looks out for friends when they\'re feeling down or under the weather, with a flower-and-heart on her tummy; the on-call hero who supports teammates through outages and notices when someone\'s burning out.' },
+        { name: 'Forest Friend Bear', icon: TreePine, color: '#9CB880', description: 'A nature-loving Care Bear with a tree on her green tummy who watches over forest animals and growing things; the engineer who treats the codebase like a living ecosystem - pruning carefully, planting durable patterns, and checking the health of dependencies before they rot.' },
         { name: 'Claude Bear', icon: Brain, color: '#D97757', description: 'A new arrival to the Care Bear family who loves reading, thinking out loud, and being helpful; the thoughtful pair-programmer who reads diffs carefully, asks the right clarifying questions, and tries hard not to ship anything you didn\'t ask for.' }
       ];
 ```
 
 - [ ] **Step 2: Verify in browser**
 
-Open `care-bears-poll.html`. The "Meet the Care Bears" section on the Vote tab should now show 21 bears (10 originals with elaborated descriptions + 11 new ones with new icons). Each new bear should display its icon. No console errors. (The voting form below still uses the old round 1 names; that's fixed in later tasks.)
+Open `care-bears-poll.html`. The "Meet the Care Bears" section on the Vote tab should now show 22 bears with canonical fur colors. Locked bears that previously had non-canonical colors (Tenderheart was hot pink, now tan; Friend was orange, now peach; etc.) and icons (Cheer used Sparkles, now Rainbow; Birthday used Gift, now Cake; Friend used Users, now Flower2) reflect canon. Forest Friend Bear renders with the TreePine icon. No console errors.
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add care-bears-poll.html
-git commit -m "Expand careBears with 11 new bears and elaborated descriptions"
+git commit -m "Update careBears with canonical colors, canonical icons, and 12 new bears"
 ```
 
 ---
@@ -332,7 +435,7 @@ git commit -m "Add Round 1 Champions section to Vote tab"
 **Files:**
 - Modify: `care-bears-poll.html` — the "Meet the Care Bears" block from the previous task.
 
-The "Meet the Care Bears" grid currently iterates `careBears`. After this task it iterates `round2Bears` (12 bears) and the heading clarifies these are the bears available for round 2.
+The "Meet the Care Bears" grid currently iterates `careBears`. After this task it iterates `round2Bears` (13 bears) and the heading clarifies these are the bears available for round 2.
 
 - [ ] **Step 1: Update the heading and the iteration source**
 
@@ -357,7 +460,7 @@ Replace with:
 
 - [ ] **Step 2: Verify in browser**
 
-Reload. The "Meet the Care Bears" section now shows exactly 12 bears: Birthday Bear (was unassigned in round 1) plus the 11 new bears (Champ, Harmony, Share, Smart Heart, Brave Heart Lion, Surprise, Secret, True Heart, Wonderheart, Take Care, Claude). The 9 locked bears (Tenderheart, Cheer, Funshine, Grumpy, Good Luck, Love-a-Lot, Friend, Wish, Bedtime) are NOT shown here. Verify by counting: 12 cards.
+Reload. The "Meet the Care Bears" section now shows exactly 13 bears: Birthday Bear (was unassigned in round 1) plus the 12 new bears (Champ, Harmony, Share, Smart Heart, Brave Heart Lion, Surprise, Secret, True Heart, Wonderheart, Take Care, Forest Friend, Claude). The 9 locked bears (Tenderheart, Cheer, Funshine, Grumpy, Good Luck, Love-a-Lot, Friend, Wish, Bedtime) are NOT shown here. Verify by counting: 13 cards.
 
 - [ ] **Step 3: Commit**
 
@@ -373,7 +476,7 @@ git commit -m "Limit Meet the Care Bears to round 2 pool"
 **Files:**
 - Modify: `care-bears-poll.html` — the voting form's per-member bear-button grid (around line 372 in the original, currently `{careBears.map((bear) => {`).
 
-The voting form's 6 per-member rows each render a button per available bear. Currently iterates all 21 bears; should iterate the 12 round 2 bears.
+The voting form's 6 per-member rows each render a button per available bear. Currently iterates all 22 bears; should iterate the 13 round 2 bears.
 
 - [ ] **Step 1: Update the iteration source for voting buttons**
 
@@ -394,7 +497,7 @@ Replace `{careBears.map((bear) => {` with `{round2Bears.map((bear) => {`. Leave 
 
 - [ ] **Step 2: Verify in browser**
 
-Reload, Vote tab. Each of the 6 round 2 voting rows (Natalia, Ivan, Federico, Claude, Intern John, Megan) now shows exactly 12 bear-button options instead of 21. Selecting one and seeing it highlight should still work. The Submit Votes button should still be present at the bottom.
+Reload, Vote tab. Each of the 6 round 2 voting rows (Natalia, Ivan, Federico, Claude, Intern John, Megan) now shows exactly 13 bear-button options instead of 22. Selecting one and seeing it highlight should still work. The Submit Votes button should still be present at the bottom.
 
 - [ ] **Step 3: Commit**
 
@@ -479,7 +582,7 @@ git commit -m "Add Round 1 Locked Assignments section to Results tab"
 **Files:**
 - Modify: `care-bears-poll.html` — the helper functions `getVoteCounts` (around lines 223–241) and `getOptimalMatching` (around lines 243–277).
 
-Currently both helpers iterate `careBears`. Since `teamMembers` is already round 2, only the bear iteration needs to change. After this task, the optimal matching considers only the 12 round 2 bears.
+Currently both helpers iterate `careBears`. Since `teamMembers` is already round 2, only the bear iteration needs to change. After this task, the optimal matching considers only the 13 round 2 bears.
 
 - [ ] **Step 1: Update `getVoteCounts` to iterate `round2Bears`**
 
@@ -519,7 +622,7 @@ Replace `careBears.forEach(bear => {` with `round2Bears.forEach(bear => {`.
 
 - [ ] **Step 3: Verify in browser**
 
-Reload, Results tab. The "⭐ Round 2 Best Matches" grid should display nothing (if the bin is empty) or only round 2 votes if any have been cast. If there are stale round 1 votes in the bin, the matching should still respect: (a) only the 6 round 2 members, and (b) only the 12 round 2 bears. The "Full Voting Breakdown" should list only the 6 round 2 members.
+Reload, Results tab. The "⭐ Round 2 Best Matches" grid should display nothing (if the bin is empty) or only round 2 votes if any have been cast. If there are stale round 1 votes in the bin, the matching should still respect: (a) only the 6 round 2 members, and (b) only the 13 round 2 bears. The "Full Voting Breakdown" should list only the 6 round 2 members.
 
 - [ ] **Step 4: Commit**
 
@@ -667,8 +770,8 @@ This task is verification only — no code changes. The goal is to confirm the p
 Open `care-bears-poll.html`. On the Vote tab, confirm:
 - Header and tabs render correctly.
 - "🏆 Round 1 Champions 🏆" gold-bordered section shows 9 cards (Ian, Javi, Jonathan, Nathan, Souffiane, Liam, Sonya, Jackie, Jidesh). Each has icon, engineer name, bear name in bear color, "🔒 Locked" badge, and elaborated description.
-- "Meet the Care Bears" section shows exactly 12 bears (Birthday + 11 new). All icons render. Descriptions follow two-part style.
-- Voting form has 6 rows (Natalia, Ivan, Federico, Claude, Intern John, Megan). Each row shows 12 bear-option buttons. Selecting bears updates the right-hand "→ BearName" indicator.
+- "Meet the Care Bears" section shows exactly 13 bears (Birthday + Forest Friend + 11 new). All icons render. Descriptions follow two-part style.
+- Voting form has 6 rows (Natalia, Ivan, Federico, Claude, Intern John, Megan). Each row shows 13 bear-option buttons. Selecting bears updates the right-hand "→ BearName" indicator.
 
 - [ ] **Step 2: Results tab — top-down visual check**
 
