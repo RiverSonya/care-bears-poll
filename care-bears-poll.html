@@ -109,6 +109,104 @@
       </svg>
     );
 
+    const Trophy = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+        <path d="M4 22h16"/>
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+      </svg>
+    );
+
+    const Music = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M9 18V5l12-2v13"/>
+        <circle cx="6" cy="18" r="3"/>
+        <circle cx="18" cy="16" r="3"/>
+      </svg>
+    );
+
+    const Share2 = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="11.49"/>
+      </svg>
+    );
+
+    const Lightbulb = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M9 18h6"/>
+        <path d="M10 22h4"/>
+        <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+      </svg>
+    );
+
+    const Shield = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      </svg>
+    );
+
+    const PartyPopper = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M5.8 11.3 2 22l10.7-3.79"/>
+        <path d="M4 3h.01"/>
+        <path d="M22 8h.01"/>
+        <path d="M15 2h.01"/>
+        <path d="M22 20h.01"/>
+        <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/>
+        <path d="m22 13-1.99-.46a2.91 2.91 0 0 0-3.13 1.97c-.21.85-1.21 1.21-1.91.71l-.4-.3c-.71-.51-1.7-.16-1.97.65L12 17"/>
+        <path d="M18 18a4 4 0 0 0-2-2 8 8 0 0 0-7-7 4 4 0 0 0-2-2"/>
+      </svg>
+    );
+
+    const Lock = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    );
+
+    const Compass = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <circle cx="12" cy="12" r="10"/>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+      </svg>
+    );
+
+    const Telescope = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44"/>
+        <path d="m13.56 11.747 4.332-.924"/>
+        <path d="m16 21-3.105-6.21"/>
+        <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z"/>
+        <path d="m6.158 8.633 1.114 4.456"/>
+        <path d="m8 21 3.105-6.21"/>
+        <circle cx="12" cy="13" r="2"/>
+      </svg>
+    );
+
+    const HeartHandshake = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+        <path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08v0c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/>
+        <path d="m18 15-2-2"/>
+        <path d="m15 18-2-2"/>
+      </svg>
+    );
+
+    const Brain = ({ size = 24, color = "currentColor", fill = "none", opacity = 1 }) => (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth="2" opacity={opacity}>
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+      </svg>
+    );
+
     const CareBearsPoll = () => {
       const [currentTab, setCurrentTab] = useState('vote');
       const [voterName, setVoterName] = useState('');
