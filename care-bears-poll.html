@@ -453,6 +453,34 @@
 
             {currentTab === 'vote' && (
               <div>
+                <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-4 border-amber-300">
+                  <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Round 1 Champions 🏆</h2>
+                  <p className="text-center text-gray-600 mb-6">These bears are locked in from our first vote.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {lockedAssignments.map(({ member, bear }) => {
+                      const bearData = careBears.find(b => b.name === bear);
+                      const Icon = bearData.icon;
+                      return (
+                        <div
+                          key={member}
+                          className="border-2 rounded-xl p-4 bg-gradient-to-br from-amber-50 to-yellow-50"
+                          style={{ borderColor: bearData.color }}
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <Icon size={32} color={bearData.color} fill={bearData.color} opacity={0.3} />
+                            <div>
+                              <div className="font-bold text-lg text-gray-800">{member}</div>
+                              <div className="text-sm font-semibold" style={{ color: bearData.color }}>{bear}</div>
+                            </div>
+                            <span className="ml-auto text-xs font-bold bg-amber-200 text-amber-800 px-2 py-1 rounded-full">🔒 Locked</span>
+                          </div>
+                          <p className="text-sm text-gray-600">{bearData.description}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
                   <h2 className="text-3xl font-bold text-purple-600 mb-6 text-center">Meet the Care Bears</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
