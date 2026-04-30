@@ -311,8 +311,24 @@
         }
 
         try {
+          const freshResponse = await fetch(API_URL, {
+            method: 'GET',
+            headers: {
+              'X-Master-Key': API_KEY
+            }
+          });
+
+          let freshVotes = {};
+          if (freshResponse.ok) {
+            const data = await freshResponse.json();
+            freshVotes = data.record || {};
+          } else {
+            alert('Error reading current votes. Please try again.');
+            return;
+          }
+
           const updatedVotes = {
-            ...votes,
+            ...freshVotes,
             [voterName]: selections
           };
 
