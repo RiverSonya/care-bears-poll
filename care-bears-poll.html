@@ -253,7 +253,23 @@
         { name: 'Claude Bear', icon: Brain, color: '#D97757', description: 'A new arrival to the Care Bear family who loves reading, thinking out loud, and being helpful; the thoughtful pair-programmer who reads diffs carefully, asks the right clarifying questions, and tries hard not to ship anything you didn\'t ask for.' }
       ];
 
-      const teamMembers = ['Ian', 'Liam', 'Jackie', 'Javi', 'Jonathan', 'Nathan', 'Sonya', 'Souffiane'];
+      const lockedAssignments = [
+        { member: 'Ian', bear: 'Tenderheart Bear' },
+        { member: 'Javi', bear: 'Funshine Bear' },
+        { member: 'Jonathan', bear: 'Cheer Bear' },
+        { member: 'Nathan', bear: 'Grumpy Bear' },
+        { member: 'Souffiane', bear: 'Bedtime Bear' },
+        { member: 'Liam', bear: 'Wish Bear' },
+        { member: 'Sonya', bear: 'Friend Bear' },
+        { member: 'Jackie', bear: 'Good Luck Bear' },
+        { member: 'Jidesh', bear: 'Love-a-Lot Bear' }
+      ];
+
+      const lockedBearNames = new Set(lockedAssignments.map(a => a.bear));
+
+      const teamMembers = ['Natalia', 'Ivan', 'Federico', 'Claude', 'Intern John', 'Megan'];
+
+      const round2Bears = careBears.filter(b => !lockedBearNames.has(b.name));
 
       useEffect(() => {
         loadAllVotes();
