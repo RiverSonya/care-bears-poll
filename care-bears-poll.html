@@ -254,9 +254,9 @@
       ];
 
       // Set to true to re-open voting (shows "Meet the Care Bears" and the voting form).
-      const votingOpen = false;
+      const votingOpen = true;
       // Set to true to show the Results tab.
-      const resultsOpen = false;
+      const resultsOpen = true;
 
       const champions = [
         { member: 'Claude', bear: 'Claude Bear' },
@@ -278,9 +278,13 @@
 
       const lockedBearNames = new Set(champions.map(a => a.bear));
 
-      const teamMembers = ['Natalia', 'Ivan', 'Federico', 'Claude', 'Intern John', 'Megan'];
+      const teamMembers = ['Nirav', 'Arnab'];
 
-      const round2Bears = careBears.filter(b => !lockedBearNames.has(b.name));
+      const availableBears = careBears.filter(b => !lockedBearNames.has(b.name));
+
+      // JSONBin rejects an empty bin, so a cleared bin holds a `_meta` key instead of voters.
+      const votersOnly = (record) =>
+        Object.fromEntries(Object.entries(record || {}).filter(([key]) => !key.startsWith('_')));
 
       useEffect(() => {
         loadAllVotes();
@@ -298,7 +302,7 @@
           
           if (response.ok) {
             const data = await response.json();
-            setVotes(data.record || {});
+            setVotes(votersOnly(data.record));
           } else {
             console.log('Could not load votes, starting fresh');
             setVotes({});
@@ -332,7 +336,7 @@
           let freshVotes = {};
           if (freshResponse.ok) {
             const data = await freshResponse.json();
-            freshVotes = data.record || {};
+            freshVotes = votersOnly(data.record);
           } else {
             alert('Error reading current votes. Please try again.');
             return;
@@ -385,7 +389,7 @@
         const counts = {};
         teamMembers.forEach(member => {
           counts[member] = {};
-          round2Bears.forEach(bear => {
+          availableBears.forEach(bear => {
             counts[member][bear.name] = 0;
           });
         });
@@ -409,7 +413,7 @@
 
         const pairs = [];
         teamMembers.forEach(member => {
-          round2Bears.forEach(bear => {
+          availableBears.forEach(bear => {
             pairs.push({
               member,
               bear: bear.name,
@@ -486,7 +490,7 @@
               <div>
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-4 border-amber-300">
                   <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
-                  <p className="text-center text-gray-600 mb-6">Every teammate's Care Bear, locked in.</p>
+                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {champions.map(({ member, bear }) => {
                       const bearData = careBears.find(b => b.name === bear);
@@ -514,9 +518,9 @@
                 {votingOpen && (
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
                   <h2 className="text-3xl font-bold text-purple-600 mb-2 text-center">Meet the Care Bears</h2>
-                  <p className="text-center text-gray-600 mb-6">Bears available for Round 2 voting.</p>
+                  <p className="text-center text-gray-600 mb-6">Bears available for Round 3 voting.</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {round2Bears.map((bear) => {
+                    {availableBears.map((bear) => {
                       const Icon = bear.icon;
                       return (
                         <div key={bear.name} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
@@ -565,7 +569,7 @@
                                 )}
                               </div>
                               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                                {round2Bears.map((bear) => {
+                                {availableBears.map((bear) => {
                                   const BearIcon = bear.icon;
                                   const isSelected = selections[member] === bear.name;
                                   return (
@@ -623,7 +627,7 @@
               <div className="space-y-8">
                 <div className="bg-white rounded-xl shadow-lg p-8 border-4 border-amber-300">
                   <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
-                  <p className="text-center text-gray-600 mb-6">Every teammate's Care Bear, locked in.</p>
+                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     {champions.map(({ member, bear }) => {
                       const bearData = careBears.find(b => b.name === bear);
@@ -645,7 +649,7 @@
 
                 <div className="bg-white rounded-xl shadow-lg p-8">
                   <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-6 text-center">
-                    ⭐ Round 2 Best Matches (Optimal 1-to-1 Assignment) ⭐
+                    ⭐ Round 3 Best Matches (Optimal 1-to-1 Assignment) ⭐
                   </h2>
                   {Object.keys(votes).length === 0 ? (
                     <p className="text-center text-gray-500 text-lg">No votes yet! Be the first to vote.</p>
