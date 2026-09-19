@@ -488,33 +488,6 @@
 
             {currentTab === 'vote' && (
               <div>
-                <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-4 border-amber-300">
-                  <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
-                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {champions.map(({ member, bear }) => {
-                      const bearData = careBears.find(b => b.name === bear);
-                      const Icon = bearData.icon;
-                      return (
-                        <div
-                          key={member}
-                          className="border-2 rounded-xl p-4 bg-gradient-to-br from-amber-50 to-yellow-50"
-                          style={{ borderColor: bearData.color }}
-                        >
-                          <div className="flex items-center gap-3 mb-2">
-                            <Icon size={32} color={bearData.color} fill={bearData.color} opacity={0.3} />
-                            <div>
-                              <div className="font-bold text-lg text-gray-800">{member}</div>
-                              <div className="text-sm font-semibold" style={{ color: bearData.color }}>{bear}</div>
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-600">{bearData.description}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
                 {votingOpen && (
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
                   <h2 className="text-3xl font-bold text-purple-600 mb-2 text-center">Meet the Care Bears</h2>
@@ -539,7 +512,7 @@
                 )}
 
                 {votingOpen && (
-                <div className="bg-white rounded-xl shadow-lg p-8">
+                <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
                   {!hasVoted ? (
                     <>
                       <div className="mb-6">
@@ -620,33 +593,37 @@
                   )}
                 </div>
                 )}
-              </div>
-            )}
-
-            {resultsOpen && currentTab === 'results' && (
-              <div className="space-y-8">
-                <div className="bg-white rounded-xl shadow-lg p-8 border-4 border-amber-300">
+                <div className="bg-white rounded-xl shadow-lg p-6 border-4 border-amber-300">
                   <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
                   <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {champions.map(({ member, bear }) => {
                       const bearData = careBears.find(b => b.name === bear);
                       const Icon = bearData.icon;
                       return (
                         <div
                           key={member}
-                          className="border-4 rounded-xl p-4 text-center bg-gradient-to-br from-amber-50 to-yellow-50"
+                          className="border-2 rounded-xl p-4 bg-gradient-to-br from-amber-50 to-yellow-50"
                           style={{ borderColor: bearData.color }}
                         >
-                          <Icon size={48} color={bearData.color} className="mx-auto mb-3" fill={bearData.color} opacity={0.3} />
-                          <div className="font-bold text-xl text-gray-800 mb-1">{member}</div>
-                          <div className="text-sm font-semibold mb-2" style={{ color: bearData.color }}>{bear}</div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <Icon size={32} color={bearData.color} fill={bearData.color} opacity={0.3} />
+                            <div>
+                              <div className="font-bold text-lg text-gray-800">{member}</div>
+                              <div className="text-sm font-semibold" style={{ color: bearData.color }}>{bear}</div>
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600">{bearData.description}</p>
                         </div>
                       );
                     })}
                   </div>
                 </div>
+              </div>
+            )}
 
+            {resultsOpen && currentTab === 'results' && (
+              <div className="space-y-8">
                 <div className="bg-white rounded-xl shadow-lg p-8">
                   <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 mb-6 text-center">
                     ⭐ Round 3 Best Matches (Optimal 1-to-1 Assignment) ⭐
@@ -746,6 +723,28 @@
                     </div>
                   </div>
                 )}
+
+                <div className="bg-white rounded-xl shadow-lg p-8 border-4 border-amber-300">
+                  <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
+                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    {champions.map(({ member, bear }) => {
+                      const bearData = careBears.find(b => b.name === bear);
+                      const Icon = bearData.icon;
+                      return (
+                        <div
+                          key={member}
+                          className="border-4 rounded-xl p-4 text-center bg-gradient-to-br from-amber-50 to-yellow-50"
+                          style={{ borderColor: bearData.color }}
+                        >
+                          <Icon size={48} color={bearData.color} className="mx-auto mb-3" fill={bearData.color} opacity={0.3} />
+                          <div className="font-bold text-xl text-gray-800 mb-1">{member}</div>
+                          <div className="text-sm font-semibold mb-2" style={{ color: bearData.color }}>{bear}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             )}
           </div>
