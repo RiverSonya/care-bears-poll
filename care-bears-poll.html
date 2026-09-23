@@ -254,11 +254,13 @@
       ];
 
       // Set to true to re-open voting (shows "Meet the Care Bears" and the voting form).
-      const votingOpen = true;
+      const votingOpen = false;
       // Set to true to show the Results tab.
-      const resultsOpen = true;
+      const resultsOpen = false;
 
       const champions = [
+        { member: 'Arnab', bear: 'Smart Heart Bear' },
+        { member: 'Nirav', bear: 'Wonderheart Bear' },
         { member: 'Claude', bear: 'Claude Bear' },
         { member: 'Intern John', bear: 'Birthday Bear' },
         { member: 'Ivan', bear: 'Brave Heart Lion' },
@@ -595,7 +597,7 @@
                 )}
                 <div className="bg-white rounded-xl shadow-lg p-6 border-4 border-amber-300">
                   <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
-                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
+                  <p className="text-center text-gray-600 mb-6">Every teammate's Care Bear, locked in.</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {champions.map(({ member, bear }) => {
                       const bearData = careBears.find(b => b.name === bear);
@@ -726,7 +728,7 @@
 
                 <div className="bg-white rounded-xl shadow-lg p-8 border-4 border-amber-300">
                   <h2 className="text-3xl font-bold text-amber-600 mb-2 text-center">🏆 Care Bear Champions 🏆</h2>
-                  <p className="text-center text-gray-600 mb-6">Locked in from earlier rounds.</p>
+                  <p className="text-center text-gray-600 mb-6">Every teammate's Care Bear, locked in.</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     {champions.map(({ member, bear }) => {
                       const bearData = careBears.find(b => b.name === bear);
