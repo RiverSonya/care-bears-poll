@@ -31,7 +31,7 @@ These are hardcoded as a constant in the source:
 | Javi | Funshine Bear |
 | Jonathan | Cheer Bear |
 | Nathan | Grumpy Bear |
-| Souffiane | Bedtime Bear |
+| Soufiane | Bedtime Bear |
 | Liam | Wish Bear |
 | Sonya | Friend Bear |
 | Jackie | Good Luck Bear |
