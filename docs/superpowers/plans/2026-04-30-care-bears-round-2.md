@@ -322,7 +322,7 @@ After this task the data layer reflects the round 2 reality: a static map of loc
 Find line 138:
 
 ```jsx
-      const teamMembers = ['Ian', 'Liam', 'Jackie', 'Javi', 'Jonathan', 'Nathan', 'Sonya', 'Souffiane'];
+      const teamMembers = ['Ian', 'Liam', 'Jackie', 'Javi', 'Jonathan', 'Nathan', 'Sonya', 'Soufiane'];
 ```
 
 Replace with:
@@ -333,7 +333,7 @@ Replace with:
         { member: 'Javi', bear: 'Funshine Bear' },
         { member: 'Jonathan', bear: 'Cheer Bear' },
         { member: 'Nathan', bear: 'Grumpy Bear' },
-        { member: 'Souffiane', bear: 'Bedtime Bear' },
+        { member: 'Soufiane', bear: 'Bedtime Bear' },
         { member: 'Liam', bear: 'Wish Bear' },
         { member: 'Sonya', bear: 'Friend Bear' },
         { member: 'Jackie', bear: 'Good Luck Bear' },
@@ -769,7 +769,7 @@ This task is verification only — no code changes. The goal is to confirm the p
 
 Open `care-bears-poll.html`. On the Vote tab, confirm:
 - Header and tabs render correctly.
-- "🏆 Round 1 Champions 🏆" gold-bordered section shows 9 cards (Ian, Javi, Jonathan, Nathan, Souffiane, Liam, Sonya, Jackie, Jidesh). Each has icon, engineer name, bear name in bear color, "🔒 Locked" badge, and elaborated description.
+- "🏆 Round 1 Champions 🏆" gold-bordered section shows 9 cards (Ian, Javi, Jonathan, Nathan, Soufiane, Liam, Sonya, Jackie, Jidesh). Each has icon, engineer name, bear name in bear color, "🔒 Locked" badge, and elaborated description.
 - "Meet the Care Bears" section shows exactly 13 bears (Birthday + Forest Friend + 11 new). All icons render. Descriptions follow two-part style.
 - Voting form has 6 rows (Natalia, Ivan, Federico, Claude, Intern John, Megan). Each row shows 13 bear-option buttons. Selecting bears updates the right-hand "→ BearName" indicator.
 
